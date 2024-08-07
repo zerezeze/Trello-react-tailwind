@@ -1,10 +1,13 @@
-export default function App() {
+// src/App.jsx
+import React from 'react';
+import Board from './components/Board';
+
+function App() {
   return (
-    //Delete the below content and start building your own.
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-4xl font-extrabold text-blue-600 underline bg-white p-6 rounded-lg shadow-lg">
-        🎉 You&apos;ve got a template! Time to make magic happen!
-      </h1>
+    <div className="App bg-gray-900 min-h-screen text-white">
+      <Board />
     </div>
   );
 }
+
+export default App;

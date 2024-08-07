@@ -18,8 +18,8 @@ Tailwind CSS: Framework CSS para estilização.
 
 Como Executar o Projeto
 
-git clone
-npm install
-npm run dev
+git clone / 
+npm install /
+npm run dev /
 
 <img src="readme-img.png/">

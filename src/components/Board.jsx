@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { DragDropContext } from '@hello-pangea/dnd';
 import TaskInput from './TaskInput';
 import Column from './Column';
-import profileImage from '../assets/ze.jpeg'; // Ajuste o caminho para a imagem
+import profileImage from '../assets/ze.jpeg'; 
 
+// Dados iniciais das colunas
 const initialData = {
   backlog: [],
   todo: [],
@@ -12,33 +13,35 @@ const initialData = {
 };
 
 const Board = () => {
+  // Função para carregar tarefas do localStorage
   const loadTasksFromLocalStorage = () => {
     const savedTasks = localStorage.getItem('tasks');
     return savedTasks ? JSON.parse(savedTasks) : initialData;
   };
 
+  // Estado das tarefas, usando os dados carregados do localStorage
   const [tasks, setTasks] = useState(loadTasksFromLocalStorage);
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editContent, setEditContent] = useState('');
 
+  // Efeito para salvar tarefas no localStorage sempre que forem atualizadas
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
 
+  // Função chamada ao final de uma ação de drag-and-drop
   const onDragEnd = (result) => {
     const { destination, source } = result;
 
+    // Verifica se não há destino válido ou se a posição não mudou
     if (!destination) return;
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) return;
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
     const start = tasks[source.droppableId];
     const finish = tasks[destination.droppableId];
 
     if (source.droppableId === destination.droppableId) {
+      // Movendo tarefas dentro da mesma coluna
       const updatedTasks = Array.from(start);
       const [movedTask] = updatedTasks.splice(source.index, 1);
       updatedTasks.splice(destination.index, 0, movedTask);
@@ -47,6 +50,7 @@ const Board = () => {
         [source.droppableId]: updatedTasks,
       }));
     } else {
+      // Movendo tarefas entre colunas diferentes
       const startTasks = Array.from(start);
       const [movedTask] = startTasks.splice(source.index, 1);
       const finishTasks = Array.from(finish);
@@ -59,6 +63,7 @@ const Board = () => {
     }
   };
 
+  // Função para adicionar uma nova tarefa na coluna 'backlog'
   const addTask = (content) => {
     const newTask = {
       id: `task-${Date.now()}`,
@@ -74,6 +79,7 @@ const Board = () => {
     }));
   };
 
+  // Função para iniciar a edição de uma tarefa
   const handleEditTask = (id) => {
     const taskToEdit = Object.values(tasks).flat().find(task => task.id === id);
     if (taskToEdit) {
@@ -82,6 +88,7 @@ const Board = () => {
     }
   };
 
+  // Função para salvar a edição de uma tarefa
   const handleSaveEdit = () => {
     setTasks((prev) => {
       const updatedTasks = Object.keys(prev).reduce((acc, key) => {
@@ -96,6 +103,7 @@ const Board = () => {
     setEditContent('');
   };
 
+  // Função para deletar uma tarefa
   const handleDeleteTask = (id) => {
     setTasks((prev) => {
       const updatedTasks = Object.keys(prev).reduce((acc, key) => {
